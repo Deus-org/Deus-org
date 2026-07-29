@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ivan Shevcov · Frontend Developer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #080b11;
+      --bg-elevated: #0d1117;
+      --bg-card: rgba(22, 27, 34, 0.7);
+      --border: rgba(48, 54, 61, 0.6);
+      --border-hover: rgba(34, 197, 94, 0.4);
+      --text: #e6edf3;
+      --text-secondary: #8b949e;
+      --text-muted: #6e7681;
+      --accent: #22c55e;
+      --accent-glow: rgba(34, 197, 94, 0.15);
+      --accent2: #3b82f6;
+      --accent2-glow: rgba(59, 130, 246, 0.15);
+      --accent3: #a855f7;
+      --accent3-glow: rgba(168, 85, 247, 0.12);
+      --danger: #f85149;
+      --warning: #d2991d;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+      --glass: rgba(22, 27, 34, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --glass-hover: rgba(22, 27, 34, 0.85);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-grid::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 50% at 50% 0%, #000 40%, transparent 100%);
+    }
+    .bg-glow-1 {
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(34, 197, 94, 0.06) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-glow-2 {
+      position: fixed;
+      bottom: -200px;
+      right: -100px;
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper { position: relative; z-index: 1; }
+
+    .lang-bar {
+      display: flex;
+      justify-content: flex-end;
+      padding: 20px 32px;
+      gap: 4px;
+      position: relative;
+      z-index: 10;
+    }
+    .lang-btn {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font);
+      letter-spacing: 0.3px;
+      transition: all var(--transition);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .lang-btn:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(22, 27, 34, 0.9);
+    }
+    .lang-btn.active {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-glow);
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 32px 80px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 36px 0 32px;
+    }
+    .hero-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #16a34a);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      margin-bottom: 20px;
+      box-shadow: 0 0 60px var(--accent-glow), 0 0 0 1px rgba(34, 197, 94, 0.2);
+      font-weight: 700;
+      letter-spacing: -1px;
+      user-select: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      padding: 6px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 16px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .hero-badge .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.3); }
+    }
+    .hero h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #e6edf3 0%, #b0b8c4 50%, #8b949e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero h1 .accent {
+      background: linear-gradient(135deg, var(--accent) 0%, #16a34a 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero .tagline {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      max-width: 600px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+
+    .typing-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      height: 40px;
+    }
+    .typing-label {
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .typing {
+      font-family: var(--font-mono);
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--accent);
+      display: inline-block;
+      border-right: 2px solid var(--accent);
+      padding-right: 5px;
+      animation: blink 1s step-end infinite;
+      min-width: 1px;
+    }
+    @keyframes blink { 0%, 100% { border-color: var(--accent); } 50% { border-color: transparent; } }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .social-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all var(--transition);
+      border: 1px solid transparent;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .social-links .tg-link {
+      background: rgba(38, 166, 154, 0.12);
+      border-color: rgba(38, 166, 154, 0.25);
+      color: #4dd4c8;
+    }
+    .social-links .tg-link:hover {
+      background: rgba(38, 166, 154, 0.2);
+      border-color: rgba(38, 166, 154, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(38, 166, 154, 0.15);
+    }
+    .social-links .email-link {
+      background: rgba(248, 81, 73, 0.1);
+      border-color: rgba(248, 81, 73, 0.2);
+      color: #f87171;
+    }
+    .social-links .email-link:hover {
+      background: rgba(248, 81, 73, 0.18);
+      border-color: rgba(248, 81, 73, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(248, 81, 73, 0.12);
+    }
+    .social-links .gh-link {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+    }
+    .social-links .gh-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+      margin: 40px 0;
+    }
+
+    .section-header {
+      margin-bottom: 28px;
+    }
+    .section-header h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .section-header h2 .icon {
+      font-size: 1.3rem;
+    }
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 44px;
+    }
+    .stat-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all var(--transition);
+    }
+    .stat-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .stat-card .stat-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      background: linear-gradient(135deg, var(--accent), #4ade80);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-card .stat-label {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    .tech-categories {
+      display: grid;
+      gap: 20px;
+    }
+    .tech-category {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 24px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all var(--transition);
+    }
+    .tech-category:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: var(--shadow);
+    }
+    .tech-category h4 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+    .tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tech-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-secondary);
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .tech-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+      transform: translateY(-1px);
+    }
+    .tech-tag .tag-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: 0.6;
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .about-card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all var(--transition);
+    }
+    .about-card:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: var(--shadow);
+    }
+    .about-card .accent-icon {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .about-card h4 {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+    }
+    .about-card p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      padding-top: 40px;
+      font-style: italic;
+      opacity: 0.7;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    [lang]:not(html) { display: none; }
+    [lang].show { display: block; }
+    [lang].show-inline { display: inline; }
+    [lang].show-flex { display: flex; }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 20px 60px; }
+      .hero h1 { font-size: 2rem; }
+      .hero-avatar { width: 80px; height: 80px; font-size: 32px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      .about-grid { grid-template-columns: 1fr; }
+      .lang-bar { padding: 14px 16px; }
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 1.6rem; }
+      .stats-row { grid-template-columns: 1fr; }
+      .social-links a { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <div class="bg-glow-1"></div>
+  <div class="bg-glow-2"></div>
+
+  <div class="wrapper">
+
+    <div class="lang-bar">
+      <button class="lang-btn active" id="btn-en" onclick="setLang('en')" aria-label="Switch to English">English</button>
+      <button class="lang-btn" id="btn-ru" onclick="setLang('ru')" aria-label="Switch to Russian">Russian</button>
+    </div>
+
+    <div class="container">
+
+      <section class="hero fade-in">
+        <div class="hero-avatar">IS</div>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          <span lang="en" class="show-inline">Available for opportunities</span>
+          <span lang="ru">Открыт к предложениям</span>
+        </div>
+        <h1>
+          <span lang="en" class="show-inline">Hey, I'm <span class="accent">Ivan Shevcov</span></span>
+          <span lang="ru">Привет, я <span class="accent">Иван Шевцов</span></span>
+        </h1>
+        <p class="tagline" lang="en" class="show">Frontend Developer with 4+ years of experience crafting high-performance, pixel-perfect web applications. Specializing in React, TypeScript, and modern web APIs.</p>
+        <p class="tagline" lang="ru">Frontend-разработчик с опытом более 4 лет. Создаю высокопроизводительные, pixel-perfect веб-приложения. Специализируюсь на React, TypeScript и современных Web API.</p>
+
+        <div class="typing-wrap">
+          <span class="typing-label" lang="en" class="show-inline">I work with</span>
+          <span class="typing-label" lang="ru">Работаю с</span>
+          <span class="typing" id="typing"></span>
+        </div>
+
+        <div class="social-links">
+          <a class="tg-link" href="https://t.me/DL1ar" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.46-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.015-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.009-1.252-.242-1.865-.442-.752-.244-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.139.122.099.155.235.172.331.017.097.038.315.022.484z"/></svg>
+            Telegram
+          </a>
+          <a class="email-link" href="mailto:Shevcovivana@gmail.com">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12.713l-11.985-9.713h23.971l-11.986 9.713zm-12-8.713v16h24v-16l-12 10-12-10z"/></svg>
+            Email
+          </a>
+          <a class="gh-link" href="https://github.com/Deus-org" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.6.111.82-.261.82-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.29-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.216.694.825.576C20.565 21.796 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <div class="stats-row fade-in">
+        <div class="stat-card">
+          <div class="stat-num">4+</div>
+          <div class="stat-label" lang="en" class="show">Years Experience</div>
+          <div class="stat-label" lang="ru">Года опыта</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">10+</div>
+          <div class="stat-label" lang="en" class="show">Projects Shipped</div>
+          <div class="stat-label" lang="ru">Проектов сделано</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2</div>
+          <div class="stat-label" lang="en" class="show">Core Frameworks</div>
+          <div class="stat-label" lang="ru">Основных фреймворка</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">Infinity</div>
+          <div class="stat-label" lang="en" class="show">Coffee Consumed</div>
+          <div class="stat-label" lang="ru">Чашек кофе</div>
+        </div>
+      </div>
+
+      <section class="fade-in">
+        <div class="section-header">
+          <h2><span class="icon">⚡</span> <span lang="en" class="show-inline">Tech Stack</span><span lang="ru">Технологический стек</span></h2>
+          <p lang="en" class="show">Technologies I use daily to build robust applications</p>
+          <p lang="ru">Технологии, с которыми я работаю ежедневно</p>
+        </div>
+        <div class="tech-categories">
+          <div class="tech-category">
+            <h4 lang="en" class="show">Frameworks & Languages</h4>
+            <h4 lang="ru">Фреймворки и языки</h4>
+            <div class="tech-tags">
+              <span class="tech-tag"><span class="tag-dot"></span>React</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Vue.js</span>
+              <span class="tech-tag"><span class="tag-dot"></span>TypeScript</span>
+              <span class="tech-tag"><span class="tag-dot"></span>JavaScript</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Node.js</span>
+            </div>
+          </div>
+          <div class="tech-category">
+            <h4 lang="en" class="show">State & Data</h4>
+            <h4 lang="ru">Состояние и данные</h4>
+            <div class="tech-tags">
+              <span class="tech-tag"><span class="tag-dot"></span>Zustand</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Pinia</span>
+              <span class="tech-tag"><span class="tag-dot"></span>TanStack Query</span>
+              <span class="tech-tag"><span class="tag-dot"></span>WebSocket</span>
+              <span class="tech-tag"><span class="tag-dot"></span>REST / GraphQL</span>
+            </div>
+          </div>
+          <div class="tech-category">
+            <h4 lang="en" class="show">Styling & UI</h4>
+            <h4 lang="ru">Стилизация и UI</h4>
+            <div class="tech-tags">
+              <span class="tech-tag"><span class="tag-dot"></span>Tailwind CSS</span>
+              <span class="tech-tag"><span class="tag-dot"></span>SCSS / SASS</span>
+              <span class="tech-tag"><span class="tag-dot"></span>shadcn/ui</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Storybook</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Framer Motion</span>
+            </div>
+          </div>
+          <div class="tech-category">
+            <h4 lang="en" class="show">Tooling & DevOps</h4>
+            <h4 lang="ru">Инструменты и DevOps</h4>
+            <div class="tech-tags">
+              <span class="tech-tag"><span class="tag-dot"></span>Vite</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Vitest</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Docker</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Git</span>
+              <span class="tech-tag"><span class="tag-dot"></span>Capacitor</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="fade-in">
+        <div class="section-header">
+          <h2><span class="icon">💡</span> <span lang="en" class="show-inline">About Me</span><span lang="ru">Обо мне</span></h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-card">
+            <span class="accent-icon">🎯</span>
+            <h4 lang="en" class="show">Deep Frontend Expertise</h4>
+            <h4 lang="ru">Глубокая frontend-экспертиза</h4>
+            <p lang="en" class="show">4+ years mastering React (hooks, concurrent features) and Vue Composition API. I understand the rendering pipeline, bundle optimization, and performance profiling.</p>
+            <p lang="ru">4+ года углублённой работы с React (хуки, concurrent-режим) и Vue Composition API. Разбираюсь в пайплайне рендеринга, оптимизации бандлов и профилировании производительности.</p>
+          </div>
+          <div class="about-card">
+            <span class="accent-icon">🧩</span>
+            <h4 lang="en" class="show">Architecture & Design Systems</h4>
+            <h4 lang="ru">Архитектура и дизайн-системы</h4>
+            <p lang="en" class="show">Build scalable component libraries with Storybook, design token systems, and maintainable CSS architecture (Tailwind, SCSS modules, CSS custom properties).</p>
+            <p lang="ru">Создаю масштабируемые библиотеки компонентов со Storybook, системы дизайн-токенов и поддерживаемую CSS-архитектуру (Tailwind, SCSS-модули, CSS custom properties).</p>
+          </div>
+          <div class="about-card">
+            <span class="accent-icon">⚡</span>
+            <h4 lang="en" class="show">Performance & Web APIs</h4>
+            <h4 lang="ru">Производительность и Web API</h4>
+            <p lang="en" class="show">Web Audio API synthesis, WebSocket real-time data, IndexedDB offline storage, PWA with service workers. I turn web apps into native-like mobile experiences via Capacitor.</p>
+            <p lang="ru">Синтез звука через Web Audio API, real-time данные по WebSocket, офлайн-хранилища IndexedDB, PWA с service workers. Превращаю веб-приложения в нативные мобильные через Capacitor.</p>
+          </div>
+          <div class="about-card">
+            <span class="accent-icon">🧪</span>
+            <h4 lang="en" class="show">Testing & Quality</h4>
+            <h4 lang="ru">Тестирование и качество</h4>
+            <p lang="en" class="show">Vitest unit/integration tests, component isolation with Storybook, clean git history, Docker containerization. I believe in tested, documented, and reproducible codebases.</p>
+            <p lang="ru">Unit/интеграционные тесты на Vitest, изоляция компонентов в Storybook, чистая git-история, контейнеризация Docker. Верю в протестированные, задокументированные и воспроизводимые кодовые базы.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="footer fade-in">
+        <span lang="en" class="show">Thanks for stopping by</span>
+        <span lang="ru">Спасибо, что заглянули</span>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const typingWords = [
+      'React', 'TypeScript', 'Vue.js',
+      'Zustand', 'TanStack Query', 'Tailwind CSS',
+      'Web Audio API', 'WebSocket', 'Vitest', 'Docker'
+    ];
+
+    let currentLang = 'en';
+    let typingIdx = 0;
+    let charIdx = 0;
+    const typingEl = document.getElementById('typing');
+    const TYPING_SPEED = 65;
+    const PAUSE = 2200;
+    const DELETE_SPEED = 30;
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-ru').classList.toggle('active', lang === 'ru');
+
+      document.querySelectorAll('[lang]').forEach(el => {
+        if (el.tagName === 'HTML') return;
+        if (el.getAttribute('lang') === lang) {
+          const tag = el.tagName.toLowerCase();
+          if (tag === 'span' || tag === 'a' || tag === 'strong' || tag === 'code' || tag === 'button') {
+            el.classList.add('show-inline');
+          } else if (tag === 'div' || tag === 'p' || tag === 'li' || tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4' || tag === 'section' || tag === 'header') {
+            el.classList.add('show');
+          } else {
+            el.classList.add('show');
+          }
+        } else {
+          el.classList.remove('show', 'show-inline', 'show-flex');
+        }
+      });
+
+      typingIdx = 0;
+      charIdx = 0;
+      clearTypingTimers();
+      type();
+    }
+
+    let typeTimer, eraseTimer;
+    function clearTypingTimers() {
+      clearTimeout(typeTimer);
+      clearTimeout(eraseTimer);
+    }
+
+    function type() {
+      const word = typingWords[typingIdx];
+      if (charIdx < word.length) {
+        typingEl.textContent = word.substring(0, charIdx + 1);
+        charIdx++;
+        typeTimer = setTimeout(type, TYPING_SPEED);
+      } else {
+        eraseTimer = setTimeout(erase, PAUSE);
+      }
+    }
+
+    function erase() {
+      if (charIdx > 0) {
+        typingEl.textContent = typingEl.textContent.slice(0, -1);
+        charIdx--;
+        eraseTimer = setTimeout(erase, DELETE_SPEED);
+      } else {
+        typingIdx = (typingIdx + 1) % typingWords.length;
+        typeTimer = setTimeout(type, 350);
+      }
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+    setLang('en');
+  </script>
+</body>
+</html>
